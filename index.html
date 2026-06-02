@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Para Ti</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap"
+    rel="stylesheet">
+
+  <!-- ╔══════════════════════════════════════════════════╗
+     ║  EDITA AQUÍ — todo lo que necesitas cambiar     ║
+     ╚══════════════════════════════════════════════════╝ -->
+  <script>
+    const INICIALES = "L - M";           // Iniciales pantalla de entrada
+    const FECHA_ESPECIAL = "01 · 06 · 2026";  // Fecha oculta esquina inferior derecha
+    const FRASE_CIERRE = "Ya puedes soltar el móvil...\ndame un abrazo puta 😉";
+  </script>
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --silver: #c8c8d4;
+      --crimson: #cc0022;
+      --violet: #c44dff;
+      --glow-v: rgba(196, 77, 255, 0.45);
+      --glow-r: rgba(180, 0, 30, 0.55);
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Cinzel', serif;
+      color: #fff;
+      touch-action: manipulation;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── SCREENS ─────────────────────────────────── */
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease;
+      will-change: opacity;
+    }
+
+    .screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════════════
+   PANTALLA 1 — ENTRADA
+══════════════════════════════════════════════ */
+    #entry-screen {
+      background: #000;
+      z-index: 20;
+    }
+
+    .entry-initials {
+      position: absolute;
+      top: 2.4rem;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1rem;
+      letter-spacing: 0.6em;
+      color: var(--silver);
+      font-weight: 400;
+      opacity: 0.5;
+      filter: drop-shadow(0 0 6px rgba(200, 200, 212, 0.25));
+      animation: breathe 3.5s ease-in-out infinite;
+    }
+
+    .entry-deco {
+      margin-bottom: 3rem;
+      animation: glow-pulse 3s ease-in-out infinite;
+    }
+
+    .enter-btn {
+      position: relative;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.85);
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      padding: 1rem 2.8rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s, color 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .enter-btn::before,
+    .enter-btn::after,
+    .ebtr,
+    .ebbl {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-color: var(--crimson);
+      border-style: solid;
+    }
+
+    .enter-btn::before {
+      top: -1px;
+      left: -1px;
+      border-width: 1.5px 0 0 1.5px;
+    }
+
+    .enter-btn::after {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 1.5px 1.5px 0;
+    }
+
+    .ebtr {
+      top: -1px;
+      right: -1px;
+      border-width: 1.5px 1.5px 0 0;
+    }
+
+    .ebbl {
+      bottom: -1px;
+      left: -1px;
+      border-width: 0 0 1.5px 1.5px;
+    }
+
+    .enter-btn:active {
+      border-color: rgba(196, 77, 255, 0.55);
+      box-shadow: 0 0 20px var(--glow-v), 0 0 40px var(--glow-r);
+      color: #fff;
+    }
+
+    /* ══════════════════════════════════════════════
+   CANVAS DE ESTRELLAS (fondo)
+══════════════════════════════════════════════ */
+    #star-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ══════════════════════════════════════════════
+   PANTALLA 2 — MAIN
+══════════════════════════════════════════════ */
+    #main-screen {
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2.6rem 1.3rem 3.5rem;
+      z-index: 5;
+      background: transparent;
+    }
+
+    .main-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.8rem;
+      max-width: 400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* header */
+    .gothic-header {
+      text-align: center;
+      width: 100%;
+    }
+
+    .gothic-header h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      line-height: 1.3;
+      background: linear-gradient(160deg, #fff 25%, var(--silver) 60%, #fff 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gothic-header h1 span {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.55em;
+      font-weight: 400;
+      -webkit-text-fill-color: var(--silver);
+      color: var(--silver);
+      margin-bottom: 0.2rem;
+      opacity: 0.7;
+    }
+
+    /* heart */
+    .heart-svg {
+      animation: heart-beat 2.4s ease-in-out infinite,
+        glow-pulse 3.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    /* message card */
+    #message-card {
+      position: relative;
+      padding: 1.8rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.02), rgba(100, 30, 120, 0.04));
+      width: 100%;
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+
+    #message-card::before,
+    #message-card::after,
+    .card-tr,
+    .card-bl {
+      content: '';
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border-color: var(--crimson);
+      border-style: solid;
+    }
+
+    #message-card::before {
+      top: -1px;
+      left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+
+    #message-card::after {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+
+    .card-tr {
+      top: -1px;
+      right: -1px;
+      border-width: 2px 2px 0 0;
+    }
+
+    .card-bl {
+      bottom: -1px;
+      left: -1px;
+      border-width: 0 0 2px 2px;
+    }
+
+    .message-text {
+      font-family: 'IM Fell English', serif;
+      font-size: 1rem;
+      line-height: 2;
+      color: #dcdcec;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .message-text .closing {
+      display: block;
+      margin-top: 0.8rem;
+      font-style: normal;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1.02rem;
+    }
+
+    /* divider */
+    .rune-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      width: 100%;
+      transition: opacity 1.2s ease;
+    }
+
+    .rune-divider::before,
+    .rune-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.18), transparent);
+    }
+
+    /* hold zone */
+    .hold-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+      width: 100%;
+      padding: 0.2rem 0 0.8rem;
+      transition: opacity 1.2s ease;
+    }
+
+    .hold-sublabel {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.56rem;
+      letter-spacing: 0.3em;
+      color: var(--silver);
+      opacity: 0.35;
+      text-transform: uppercase;
+    }
+
+    #hold-btn {
+      position: relative;
+      width: 200px;
+      height: 48px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.65);
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #hold-btn::before,
+    #hold-btn::after,
+    .hbtr,
+    .hbbl {
+      content: '';
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-color: var(--crimson);
+      border-style: solid;
+      pointer-events: none;
+    }
+
+    #hold-btn::before {
+      top: -1px;
+      left: -1px;
+      border-width: 1.5px 0 0 1.5px;
+    }
+
+    #hold-btn::after {
+      bottom: -1px;
+      right: -1px;
+      border-width: 0 1.5px 1.5px 0;
+    }
+
+    .hbtr {
+      top: -1px;
+      right: -1px;
+      border-width: 1.5px 1.5px 0 0;
+    }
+
+    .hbbl {
+      bottom: -1px;
+      left: -1px;
+      border-width: 0 0 1.5px 1.5px;
+    }
+
+    #hold-progress {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(180, 0, 30, 0.22), rgba(196, 77, 255, 0.18));
+      transform-origin: left;
+      transform: scaleX(0);
+      pointer-events: none;
+    }
+
+    #hold-btn.holding {
+      border-color: rgba(196, 77, 255, 0.5);
+      box-shadow: 0 0 16px var(--glow-v), 0 0 32px var(--glow-r);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* fecha oculta */
+    .secret-date {
+      position: fixed;
+      bottom: 1.1rem;
+      right: 1.1rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: #222;
+      z-index: 3;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════════════
+   PANTALLA 3 — CIERRE
+══════════════════════════════════════════════ */
+    #close-screen {
+      z-index: 30;
+      background: #000;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .close-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      animation: fade-up 0.8s ease both;
+    }
+
+    .close-msg {
+      font-family: 'IM Fell English', serif;
+      font-size: 1.35rem;
+      line-height: 1.75;
+      color: #fff;
+      font-style: italic;
+      white-space: pre-line;
+      animation: glow-text 3s ease-in-out infinite;
+    }
+
+    .close-star {
+      animation: glow-pulse 2.5s ease-in-out infinite, spin-slow 20s linear infinite;
+      opacity: 0.7;
+    }
+
+    /* ══════════════════════════════════════════════
+   FLOATING HEARTS
+══════════════════════════════════════════════ */
+    .float-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 200;
+      will-change: transform, opacity;
+      animation: heart-float var(--dur) ease-out both;
+    }
+
+    @keyframes heart-float {
+      0% {
+        transform: translateX(var(--dx0)) translateY(0) scale(var(--s)) rotate(var(--rot));
+        opacity: 0;
+      }
+
+      8% {
+        opacity: 1;
+      }
+
+      50% {
+        transform: translateX(var(--dx1)) translateY(var(--my)) scale(var(--s)) rotate(calc(var(--rot)*-0.5));
+        opacity: 0.85;
+      }
+
+      100% {
+        transform: translateX(var(--dx2)) translateY(var(--ey)) scale(calc(var(--s)*0.5)) rotate(0deg);
+        opacity: 0;
+      }
+    }
+
+    /* ══════════════════════════════════════════════
+   ANIMACIONES BASE
+══════════════════════════════════════════════ */
+    @keyframes breathe {
+
+      0%,
+      100% {
+        opacity: 0.45;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.75;
+        transform: scale(1.02);
+      }
+    }
+
+    @keyframes glow-pulse {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 8px rgba(170, 0, 25, 0.25));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 9px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 22px rgba(170, 0, 25, 0.65)) drop-shadow(0 0 38px rgba(196, 77, 255, 0.35));
+      }
+    }
+
+    @keyframes glow-text {
+
+      0%,
+      100% {
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.2), 0 0 20px rgba(196, 77, 255, 0.2);
+      }
+
+      50% {
+        text-shadow: 0 0 18px rgba(255, 255, 255, 0.7), 0 0 40px rgba(196, 77, 255, 0.5), 0 0 60px rgba(180, 0, 30, 0.3);
+      }
+    }
+
+    @keyframes heart-beat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      14% {
+        transform: scale(1.16);
+      }
+
+      28% {
+        transform: scale(1);
+      }
+
+      42% {
+        transform: scale(1.09);
+      }
+
+      56% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes spin-slow {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .main-inner>* {
+      animation: fade-up 0.7s ease both;
+    }
+
+    .main-inner>*:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .main-inner>*:nth-child(2) {
+      animation-delay: 0.28s;
+    }
+
+    .main-inner>*:nth-child(3) {
+      animation-delay: 0.44s;
+    }
+
+    .main-inner>*:nth-child(4) {
+      animation-delay: 0.58s;
+    }
+
+    .main-inner>*:nth-child(5) {
+      animation-delay: 0.72s;
+    }
+
+    .main-inner>*:nth-child(6) {
+      animation-delay: 0.86s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ AUDIO ══ -->
+  <audio id="bg-audio" src="cherry-waves.mp3" loop preload="auto"></audio>
+
+  <!-- ══ CANVAS ESTRELLAS ══ -->
+  <canvas id="star-canvas"></canvas>
+
+  <!-- ══════════════════════════════════════
+     PANTALLA 1 — ENTRADA
+══════════════════════════════════════ -->
+  <div id="entry-screen" class="screen">
+    <p class="entry-initials" id="el-iniciales"></p>
+
+    <!-- Estrella gótica central -->
+    <div class="entry-deco">
+      <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="gf">
+            <feGaussianBlur stdDeviation="2.5" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <g filter="url(#gf)">
+          <!-- Rombo vertical -->
+          <polygon points="75,7 86,73 75,143 64,73" fill="rgba(255,255,255,0.03)" stroke="#fff" stroke-width="0.6" />
+          <!-- Rombo horizontal -->
+          <polygon points="7,75 64,64 143,75 64,86" fill="rgba(255,255,255,0.03)" stroke="#fff" stroke-width="0.6" />
+          <!-- Diagonales carmesí -->
+          <line x1="75" y1="7" x2="143" y2="75" stroke="rgba(200,0,30,0.35)" stroke-width="0.5" />
+          <line x1="143" y1="75" x2="75" y2="143" stroke="rgba(200,0,30,0.35)" stroke-width="0.5" />
+          <line x1="75" y1="143" x2="7" y2="75" stroke="rgba(200,0,30,0.35)" stroke-width="0.5" />
+          <line x1="7" y1="75" x2="75" y2="7" stroke="rgba(200,0,30,0.35)" stroke-width="0.5" />
+          <!-- Octógono interior -->
+          <polygon points="75,42 96,53 104,75 96,97 75,108 54,97 46,75 54,53" fill="rgba(100,30,130,0.12)"
+            stroke="rgba(196,77,255,0.55)" stroke-width="0.8" />
+          <!-- Puntas de pico -->
+          <polygon points="75,12 77,28 75,32 73,28" fill="rgba(255,255,255,0.85)" />
+          <polygon points="75,118 77,122 75,138 73,122" fill="rgba(255,255,255,0.85)" />
+          <polygon points="12,75 28,73 32,75 28,77" fill="rgba(255,255,255,0.85)" />
+          <polygon points="118,75 122,73 138,75 122,77" fill="rgba(255,255,255,0.85)" />
+          <!-- Diamante central -->
+          <polygon points="75,67 80,75 75,83 70,75" fill="rgba(255,255,255,0.65)" stroke="rgba(196,77,255,0.8)"
+            stroke-width="0.7" />
+          <!-- Círculo interior glow -->
+          <circle cx="75" cy="75" r="5" fill="rgba(196,77,255,0.25)" stroke="rgba(196,77,255,0.7)" stroke-width="0.8" />
+        </g>
+        <!-- Anillo giratorio -->
+        <circle cx="75" cy="75" r="68" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.6"
+          stroke-dasharray="3 7" style="transform-origin:75px 75px; animation:spin-slow 22s linear infinite;" />
+      </svg>
+    </div>
+
+    <!-- Botón Entrar -->
+    <button class="enter-btn" onclick="enterSite()">
+      <span class="ebtr"></span>
+      <span class="ebbl"></span>
+      Entrar
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PANTALLA 2 — MAIN
+══════════════════════════════════════ -->
+  <div id="main-screen" class="screen hidden">
+    <div class="main-inner">
+
+      <!-- Header con barras de picos -->
+      <div class="gothic-header">
+        <svg width="100%" height="22" viewBox="0 0 320 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"
+          style="display:block;margin-bottom:0.55rem;">
+          <line x1="0" y1="11" x2="320" y2="11" stroke="rgba(255,255,255,0.12)" stroke-width="0.5" />
+          <polygon points="160,2 162.5,9 160,16 157.5,9" fill="rgba(255,255,255,0.85)" />
+          <polygon points="148,5 150,10 148,15 146,10" fill="rgba(196,77,255,0.65)" />
+          <polygon points="172,5 174,10 172,15 170,10" fill="rgba(196,77,255,0.65)" />
+          <polygon points="136,7 137.2,11 136,15 134.8,11" fill="rgba(255,255,255,0.3)" />
+          <polygon points="184,7 185.2,11 184,15 182.8,11" fill="rgba(255,255,255,0.3)" />
+          <polygon points="0,11 5,8 10,11 5,14" fill="rgba(255,255,255,0.35)" />
+          <polygon points="320,11 315,8 310,11 315,14" fill="rgba(255,255,255,0.35)" />
+        </svg>
+        <h1><span>con todo mi amor</span>Para Ti</h1>
+        <svg width="100%" height="22" viewBox="0 0 320 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"
+          style="display:block;margin-top:0.55rem;">
+          <line x1="0" y1="11" x2="320" y2="11" stroke="rgba(255,255,255,0.12)" stroke-width="0.5" />
+          <polygon points="160,20 162.5,13 160,6 157.5,13" fill="rgba(255,255,255,0.85)" />
+          <polygon points="148,17 150,12 148,7 146,12" fill="rgba(196,77,255,0.65)" />
+          <polygon points="172,17 174,12 172,7 170,12" fill="rgba(196,77,255,0.65)" />
+          <polygon points="136,15 137.2,11 136,7 134.8,11" fill="rgba(255,255,255,0.3)" />
+          <polygon points="184,15 185.2,11 184,7 182.8,11" fill="rgba(255,255,255,0.3)" />
+          <polygon points="0,11 5,8 10,11 5,14" fill="rgba(255,255,255,0.35)" />
+          <polygon points="320,11 315,8 310,11 315,14" fill="rgba(255,255,255,0.35)" />
+        </svg>
+      </div>
+
+      <!-- Corazón gótico -->
+      <svg class="heart-svg" width="76" height="70" viewBox="0 0 80 74" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="hglow">
+            <feGaussianBlur stdDeviation="2.5" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <g filter="url(#hglow)">
+          <path
+            d="M40 68 C40 68 6 46 6 24 C6 13 14 6 24 6 C30 6 36 10 40 16 C44 10 50 6 56 6 C66 6 74 13 74 24 C74 46 40 68 40 68Z"
+            fill="rgba(90,0,18,0.75)" stroke="rgba(210,0,35,0.9)" stroke-width="1.2" />
+          <line x1="40" y1="8" x2="40" y2="0" stroke="rgba(255,255,255,0.6)" stroke-width="1" />
+          <polygon points="40,0 41.5,4 40,6.5 38.5,4" fill="rgba(255,255,255,0.85)" />
+          <line x1="19" y1="15" x2="13" y2="9" stroke="rgba(255,255,255,0.38)" stroke-width="0.8" />
+          <polygon points="13,9 16,12 14,15 11,12" fill="rgba(255,255,255,0.5)" />
+          <line x1="61" y1="15" x2="67" y2="9" stroke="rgba(255,255,255,0.38)" stroke-width="0.8" />
+          <polygon points="67,9 64,12 66,15 69,12" fill="rgba(255,255,255,0.5)" />
+          <path d="M40 60 C40 60 15 42 15 26 C15 18 20 12 27 12" fill="none" stroke="rgba(255,100,110,0.22)"
+            stroke-width="0.8" />
+          <polygon points="40,28 44,34 40,40 36,34" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.4)"
+            stroke-width="0.6" />
+          <polygon points="40,30 43,34 40,38 37,34" fill="rgba(210,0,35,0.5)" />
+        </g>
+      </svg>
+
+      <!-- Tarjeta de mensaje -->
+      <div id="message-card">
+        <span class="card-tr"></span>
+        <span class="card-bl"></span>
+        <p class="message-text">
+          No soy muy bueno con las palabras,<br>
+          por eso te hago esto.<br>
+          <br>
+          Quería tener un detalle real contigo<br>
+          y recordarte lo mucho que significas para mí.<br>
+          <br>
+          Me cuesta abrirme o decir según qué cosas a la cara,<br>
+          pero contigo todo es más fácil.<br>
+          <br>
+          Gracias por estar ahí siempre,<br>
+          por la paciencia<br>
+          y por sumar tanto a mi vida todos los días.<br>
+          <strong class="closing">Eres mi prioridad.<br>Te quiero muchísimo.</strong>
+        </p>
+      </div>
+
+      <!-- Divisor rúnico -->
+      <div class="rune-divider">
+        <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="14,2 16,11.5 25,14 16,16.5 14,26 12,16.5 3,14 12,11.5" fill="rgba(196,77,255,0.12)"
+            stroke="rgba(196,77,255,0.75)" stroke-width="0.8" />
+          <polygon points="14,6 15.2,12 20,14 15.2,16 14,22 12.8,16 8,14 12.8,12" fill="rgba(255,255,255,0.04)"
+            stroke="rgba(255,255,255,0.45)" stroke-width="0.5" />
+        </svg>
+      </div>
+
+      <!-- Zona botón hold -->
+      <div class="hold-zone">
+        <button id="hold-btn">
+          <div id="hold-progress"></div>
+          <span class="hbtr"></span>
+          <span class="hbbl"></span>
+          ✦ MANTÉN PULSADO ✦
+        </button>
+        <p class="hold-sublabel">durante 2 segundos</p>
+      </div>
+
+    </div><!-- /main-inner -->
+  </div><!-- /main-screen -->
+
+  <!-- Fecha oculta -->
+  <p class="secret-date" id="el-fecha"></p>
+
+  <!-- ══════════════════════════════════════
+     PANTALLA 3 — CIERRE
+══════════════════════════════════════ -->
+  <div id="close-screen" class="screen hidden">
+    <div class="close-inner">
+      <svg class="close-star" width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,4 54,43 96,50 54,57 50,96 46,57 4,50 46,43" fill="rgba(196,77,255,0.15)"
+          stroke="rgba(196,77,255,0.85)" stroke-width="1" />
+        <polygon points="50,16 53,44 78,50 53,56 50,84 47,56 22,50 47,44" fill="rgba(255,255,255,0.04)"
+          stroke="rgba(255,255,255,0.5)" stroke-width="0.7" />
+        <polygon points="50,34 52,46 64,50 52,54 50,66 48,54 36,50 48,46" fill="rgba(196,77,255,0.3)" />
+      </svg>
+      <p class="close-msg" id="el-cierre"></p>
+      <svg width="40" height="10" viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg" style="opacity:0.35;">
+        <line x1="0" y1="5" x2="100" y2="5" stroke="rgba(255,255,255,0.4)" stroke-width="0.6" />
+        <polygon points="50,1 52,5 50,9 48,5" fill="rgba(255,255,255,0.7)" />
+        <polygon points="25,3 26.2,5 25,7 23.8,5" fill="rgba(196,77,255,0.7)" />
+        <polygon points="75,3 76.2,5 75,7 73.8,5" fill="rgba(196,77,255,0.7)" />
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    // ── Inyectar textos editables ─────────────────────
+    document.getElementById('el-iniciales').textContent = INICIALES;
+    document.getElementById('el-fecha').textContent = FECHA_ESPECIAL;
+    document.getElementById('el-cierre').textContent = FRASE_CIERRE;
+
+    // ══════════════════════════════════════════════════
+    // CANVAS — ESTRELLAS GÓTICAS FLOTANTES
+    // ══════════════════════════════════════════════════
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, stars = [];
+    let touchX = -999, touchY = -999;
+    let starsActive = false;
+    let converging = false;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', () => { resize(); initStars(); });
+
+    class Star {
+      constructor(randomPos) {
+        this.reset(randomPos);
+      }
+      reset(rp) {
+        this.x = rp ? Math.random() * W : Math.random() * W;
+        this.y = rp ? Math.random() * H : -10;
+        this.size = 1.8 + Math.random() * 3.5;
+        this.vx = (Math.random() - 0.5) * 0.18;
+        this.vy = 0.12 + Math.random() * 0.22;
+        this.rot = Math.random() * Math.PI;
+        this.rv = (Math.random() - 0.5) * 0.008;
+        const p = Math.random();
+        this.color = p < 0.55
+          ? 'rgba(200,200,215,'
+          : p < 0.8
+            ? 'rgba(196,77,255,'
+            : 'rgba(255,255,255,';
+        this.alpha = 0.1 + Math.random() * 0.55;
+        this.converging = false;
+        this.cx = 0; this.cy = 0; this.convSpd = 0.04;
+      }
+      update() {
+        if (this.converging) {
+          const dx = this.cx - this.x;
+          const dy = this.cy - this.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < 2) return;
+          this.x += dx * this.convSpd;
+          this.y += dy * this.convSpd;
+          this.alpha = Math.min(this.alpha + 0.01, 1);
+          this.rot += 0.04;
+          return;
+        }
+        this.x += this.vx;
+        this.y += this.vy;
+        this.rot += this.rv;
+        // Repulsión suave al dedo
+        if (touchX > 0) {
+          const dx = this.x - touchX;
+          const dy = this.y - touchY;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < 80 && d > 0) {
+            const f = (80 - d) / 80 * 0.35;
+            this.x += (dx / d) * f;
+            this.y += (dy / d) * f;
+          }
+        }
+        if (this.y > H + 12) this.reset(false);
+        if (this.x < -12) this.x = W + 12;
+        if (this.x > W + 12) this.x = -12;
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rot);
+        const s = this.size;
+        ctx.fillStyle = this.color + this.alpha + ')';
+        ctx.strokeStyle = this.color + Math.min(1, this.alpha * 1.6) + ')';
+        ctx.lineWidth = 0.4;
+        // Estrella de 4 puntas afilada
+        ctx.beginPath();
+        ctx.moveTo(0, -s);
+        ctx.lineTo(s * 0.16, -s * 0.16);
+        ctx.lineTo(s, 0);
+        ctx.lineTo(s * 0.16, s * 0.16);
+        ctx.lineTo(0, s);
+        ctx.lineTo(-s * 0.16, s * 0.16);
+        ctx.lineTo(-s, 0);
+        ctx.lineTo(-s * 0.16, -s * 0.16);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+      converge(cx, cy) {
+        this.converging = true;
+        this.cx = cx + (Math.random() - 0.5) * 30;
+        this.cy = cy + (Math.random() - 0.5) * 30;
+        this.convSpd = 0.025 + Math.random() * 0.035;
+      }
+    }
+
+    function initStars() {
+      stars = [];
+      const n = Math.min(60, Math.floor((W * H) / 10000));
+      for (let i = 0; i < n; i++) stars.push(new Star(true));
+    }
+    initStars();
+
+    function starLoop() {
+      if (!starsActive) { requestAnimationFrame(starLoop); return; }
+      ctx.clearRect(0, 0, W, H);
+      stars.forEach(s => { s.update(); s.draw(); });
+      requestAnimationFrame(starLoop);
+    }
+    starLoop();
+
+    // Interacción táctil con estrellas
+    window.addEventListener('touchmove', e => {
+      touchX = e.touches[0].clientX;
+      touchY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchend', () => { touchX = touchY = -999; }, { passive: true });
+    window.addEventListener('mousemove', e => { touchX = e.clientX; touchY = e.clientY; });
+
+    // ══════════════════════════════════════════════════
+    // ENTRADA
+    // ══════════════════════════════════════════════════
+    function enterSite() {
+      const entry = document.getElementById('entry-screen');
+      const main = document.getElementById('main-screen');
+      const audio = document.getElementById('bg-audio');
+
+      // Fade audio
+      audio.volume = 0;
+      audio.play().then(() => {
+        let v = 0;
+        const t = setInterval(() => {
+          v = Math.min(v + 0.035, 0.72);
+          audio.volume = v;
+          if (v >= 0.72) clearInterval(t);
+        }, 160);
+      }).catch(() => { });
+
+      entry.style.opacity = '0';
+      setTimeout(() => {
+        entry.classList.add('hidden');
+        main.classList.remove('hidden');
+        main.style.opacity = '0';
+        starsActive = true;
+        requestAnimationFrame(() => {
+          main.style.transition = 'opacity 1s ease';
+          main.style.opacity = '1';
+        });
+      }, 750);
+    }
+
+    // ══════════════════════════════════════════════════
+    // BOTÓN HOLD — CORAZONES + CIERRE
+    // ══════════════════════════════════════════════════
+    const holdBtn = document.getElementById('hold-btn');
+    const holdProgress = document.getElementById('hold-progress');
+    const HOLD_MS = 2000;
+    let holdActive = false, holdStart = 0;
+    let holdTimer = null, holdRAF = null, heartIval = null;
+
+    const HC = [
+      { fill: 'rgba(175,0,28,0.88)', glow: 'rgba(220,0,40,0.6)' },
+      { fill: 'rgba(196,77,255,0.82)', glow: 'rgba(196,77,255,0.55)' },
+      { fill: 'rgba(255,255,255,0.72)', glow: 'rgba(255,255,255,0.4)' },
+      { fill: 'rgba(130,0,50,0.82)', glow: 'rgba(180,0,80,0.5)' },
+    ];
+
+    function spawnHeart() {
+      const el = document.createElement('div');
+      el.classList.add('float-heart');
+      const sx = 10 + Math.random() * (W - 20);
+      const sy = 20 + Math.random() * (H - 40);
+      const sz = 16 + Math.random() * 28;
+      const dur = 1.9 + Math.random() * 1.3;
+      const dx0 = (Math.random() - .5) * 16 + 'px';
+      const dx1 = (Math.random() - .5) * 34 + 'px';
+      const dx2 = (Math.random() - .5) * 52 + 'px';
+      const ey = -(100 + Math.random() * 150) + 'px';
+      const my = -(40 + Math.random() * 65) + 'px';
+      const sc = .5 + Math.random() * .75;
+      const rot = (Math.random() - .5) * 26 + 'deg';
+      const c = HC[Math.floor(Math.random() * HC.length)];
+      const thn = Math.random() > .4;
+      el.style.cssText = `left:${sx}px;top:${sy}px;--dur:${dur}s;--dx0:${dx0};--dx1:${dx1};--dx2:${dx2};--ey:${ey};--my:${my};--s:${sc};--rot:${rot};`;
+      el.innerHTML = `<svg width="${sz}" height="${sz * .92}" viewBox="0 0 80 74" xmlns="http://www.w3.org/2000/svg"
+    style="filter:drop-shadow(0 0 5px ${c.glow}) drop-shadow(0 0 10px ${c.glow});">
+    <path d="M40 68 C40 68 6 46 6 24 C6 13 14 6 24 6 C30 6 36 10 40 16 C44 10 50 6 56 6 C66 6 74 13 74 24 C74 46 40 68 40 68Z"
+      fill="${c.fill}" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+    ${thn ? `<line x1="40" y1="8" x2="40" y2="0" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
+    <polygon points="40,0 41.5,4 40,6 38.5,4" fill="rgba(255,255,255,0.8)"/>`: ''}
+    <polygon points="40,28 44,34 40,40 36,34" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+  </svg>`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000 + 100);
+    }
+
+    function updateProgress() {
+      if (!holdActive) return;
+      const pct = Math.min((Date.now() - holdStart) / HOLD_MS, 1);
+      holdProgress.style.transition = 'none';
+      holdProgress.style.transform = `scaleX(${pct})`;
+      if (pct < 1) holdRAF = requestAnimationFrame(updateProgress);
+    }
+
+    function startHold() {
+      if (holdActive) return;
+      holdActive = true; holdStart = Date.now();
+      holdBtn.classList.add('holding');
+      for (let i = 0; i < 3; i++) spawnHeart();
+      heartIval = setInterval(() => { if (!holdActive) return; for (let i = 0; i < 2 + Math.floor(Math.random() * 2); i++) spawnHeart(); }, 200);
+      holdRAF = requestAnimationFrame(updateProgress);
+      holdTimer = setTimeout(triggerClose, HOLD_MS);
+    }
+
+    function cancelHold() {
+      if (!holdActive) return;
+      holdActive = false;
+      holdBtn.classList.remove('holding');
+      clearTimeout(holdTimer); clearInterval(heartIval); cancelAnimationFrame(holdRAF);
+      holdProgress.style.transition = 'transform 0.4s ease';
+      holdProgress.style.transform = 'scaleX(0)';
+    }
+
+    function triggerClose() {
+      holdActive = false;
+      clearInterval(heartIval); cancelAnimationFrame(holdRAF);
+
+      // 1. Estrellas convergen al centro
+      const cx = W / 2, cy = H / 2;
+      stars.forEach(s => s.converge(cx, cy));
+
+      // 2. Fade out tarjeta, divisor y botón
+      ['message-card'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.transition = 'opacity 1.3s ease, transform 1.3s ease';
+        el.style.opacity = '0';
+        el.style.transform = 'scale(0.95)';
+      });
+      document.querySelectorAll('.rune-divider,.hold-zone,.heart-svg,.gothic-header').forEach(el => {
+        el.style.transition = 'opacity 1.3s ease';
+        el.style.opacity = '0';
+      });
+
+      // 3. Revelar pantalla de cierre
+      setTimeout(() => {
+        const main = document.getElementById('main-screen');
+        const close = document.getElementById('close-screen');
+        starsActive = false;
+        // Apagar stars, limpiar canvas
+        setTimeout(() => ctx.clearRect(0, 0, W, H), 400);
+        main.style.transition = 'opacity 1s ease';
+        main.style.opacity = '0';
+        setTimeout(() => {
+          main.classList.add('hidden');
+          close.classList.remove('hidden');
+          close.style.opacity = '0';
+          requestAnimationFrame(() => {
+            close.style.transition = 'opacity 1.3s ease';
+            close.style.opacity = '1';
+          });
+        }, 800);
+      }, 1500);
+    }
+
+    holdBtn.addEventListener('mousedown', startHold);
+    holdBtn.addEventListener('touchstart', startHold, { passive: true });
+    holdBtn.addEventListener('mouseup', cancelHold);
+    holdBtn.addEventListener('mouseleave', cancelHold);
+    holdBtn.addEventListener('touchend', cancelHold);
+    holdBtn.addEventListener('touchcancel', cancelHold);
+  </script>
+</body>
+
+</html>
